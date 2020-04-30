@@ -13,14 +13,18 @@ variables:
   buildConfiguration: 'Release'
 
 jobs:
-- job: Foo
+- job: generator
   steps:
-  - script: |
-      echo "This is job Foo."
-      echo "##vso[task.setvariable variable=doThing;isOutput=false]Yes" #The variable doThing is set to true
-    name: DetermineResult
-- job: Bar
-  dependsOn: Foo
-  condition: eq(dependencies.Foo.outputs['DetermineResult.doThing'], 'Yes') #map doThing and check if true
+  - bash: echo "##vso[task.setVariable variable=legs;isOutput=true]{'a':{'myvar':'A'}, 'b':{'myvar':'B'}}"
+    name: mtrx
+  # This expands to the matrix
+  #   a:
+  #     myvar: A
+  #   b:
+  #     myvar: B
+- job: runner
+  dependsOn: generator
+  strategy:
+    matrix: $[ dependencies.generator.outputs['mtrx.legs'] ]
   steps:
-  - script: echo "Job Foo ran and doThing is true."
+  - script: echo $(myvar) # echos A or B depending on which leg is running
