@@ -12,38 +12,11 @@ pool:
 variables:
   buildConfiguration: 'Release'
 
-# do this before your build tasks
-steps:
-#- task: DotNetCoreCLI@2
-#  displayName: Restore
-#  inputs:
-#    command: restore
-#    projects: '**/*.csproj'
-#    feedsToUse: config
-#    nugetConfigPath: NuGet.config    # Relative to root of the repository
-#    externalFeedCredentials: <Name of the NuGet service connection>
-
-#- task: DotNetCoreCLI@2
-#  inputs:
-#    command: test
-#    projects: Refit.Tests/Refit.Tests.csproj
-#    arguments: -c $(BuildConfiguration) --settings $(System.DefaultWorkingDirectory)/CodeCoverage.runsettings --collect:"XPlat Code Coverage" -- RunConfiguration.DisableAppDomain=true
-#  displayName: Run Tests
-
-- task: DotNetCoreCLI@2
-  inputs:
-    command: publish
-    publishWebProjects: True
-    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-    zipAfterPublish: True
-
-# this code takes all the files in $(Build.ArtifactStagingDirectory) and uploads them as an artifact of your build.
-- task: PublishBuildArtifacts@1
-  inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
-    artifactName: 'myWebsiteName'
-
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'build'
-    projects: 'pipelines-dotnet-core.csproj'
+jobs:
+- job: Debug
+  steps:
+  - script: echo hello from the Debug build
+- job: Release
+  dependsOn: Debug
+  steps:
+  - script: echo hello from the Release build
