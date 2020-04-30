@@ -13,10 +13,20 @@ variables:
   buildConfiguration: 'Release'
 
 jobs:
-- job: Debug
+- job: A
   steps:
-  - script: echo hello from the Debug build
-- job: Release
-  dependsOn: Debug
+  - script: exit 1
+
+- job: B
+  dependsOn: A
+  condition: failed()
   steps:
-  - script: echo hello from the Release build
+  - script: echo this will run when A fails
+
+- job: C
+  dependsOn:
+  - A
+  - B
+  condition: succeeded('B')
+  steps:
+  - script: echo this will run when B runs and succeeds
