@@ -9,22 +9,18 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-variables:
-  buildConfiguration: 'Release'
+#variables:
+#  buildConfiguration: 'Release'
 
-jobs:
-- job: generator
-  steps:
-  - bash: echo "##vso[task.setVariable variable=legs;isOutput=true]{'a':{'myvar':'A'}, 'b':{'myvar':'B'}}"
-    name: mtrx
-  # This expands to the matrix
-  #   a:
-  #     myvar: A
-  #   b:
-  #     myvar: B
-- job: runner
-  dependsOn: generator
-  strategy:
-    matrix: $[ dependencies.generator.outputs['mtrx.legs'] ]
-  steps:
-  - script: echo $(myvar) # echos A or B depending on which leg is running
+variables:
+  mySimpleVar: simple var value
+  "my.dotted.var": dotted var value
+  "my var with spaces": var with spaces value
+
+steps:
+- script: echo Input macro = $(mySimpleVar). Env var = %MYSIMPLEVAR%
+  condition: eq(variables['agent.os'], 'Windows_NT')
+- script: echo Input macro = $(mySimpleVar). Env var = $MYSIMPLEVAR
+  condition: in(variables['agent.os'], 'Darwin', 'Linux')
+- bash: echo Input macro = $(my.dotted.var). Env var = $MY_DOTTED_VAR
+- powershell: Write-Host "Input macro = $(my var with spaces). Env var = $env:MY_VAR_WITH_SPACES"
