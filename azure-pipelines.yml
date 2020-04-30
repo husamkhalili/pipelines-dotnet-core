@@ -13,20 +13,14 @@ variables:
   buildConfiguration: 'Release'
 
 jobs:
-- job: A
+- job: Foo
   steps:
-  - script: exit 1
-
-- job: B
-  dependsOn: A
-  condition: failed()
+  - script: |
+      echo "This is job Foo."
+      echo "##vso[task.setvariable variable=doThing;isOutput=true]Yes" #The variable doThing is set to true
+    name: DetermineResult
+- job: Bar
+  dependsOn: Foo
+  condition: eq(dependencies.Foo.outputs['DetermineResult.doThing'], 'Yes') #map doThing and check if true
   steps:
-  - script: echo this will run when A fails
-
-- job: C
-  dependsOn:
-  - A
-  - B
-  condition: succeeded('B')
-  steps:
-  - script: echo this will run when B runs and succeeds
+  - script: echo "Job Foo ran and doThing is true."
