@@ -11,7 +11,7 @@ stages:
      jobs:
        - job: 
 pool:
-        name: Default
+        name: Azure Pipelines
         demands:
         - SpecialSoftware # Check if SpecialSoftware capability exists
         - Agent.OS -equals Linux # Check if Agent.OS == Linux
