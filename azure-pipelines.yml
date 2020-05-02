@@ -6,7 +6,8 @@
 trigger:
 - master
 
-
+stages:
+  -  stage: xyz
 pool:
   name: Default
   demands:
