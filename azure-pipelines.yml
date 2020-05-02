@@ -7,12 +7,12 @@ trigger:
 - master
 
 stages:
-  -  stage: xyz
+  -  stage: 
      jobs:
-       - job: x
+       - job: 
 pool:
         name: Default
         demands:
         - SpecialSoftware # Check if SpecialSoftware capability exists
-      
+        - Agent.OS -equals Linux # Check if Agent.OS == Linux
 
