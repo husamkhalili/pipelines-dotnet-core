@@ -1,11 +1,19 @@
-FROM node:8
+FROM microsoft/dotnet:2.2-sdk as build
 
-WORKDIR /usr/src/app
+ARG BUILDCONFIG=RELEASE
+ARG VERSION=1.0.0
 
-COPY . ./
-RUN npm ci --only=production
+COPY pipelines-dotnet-core.csproj /build/
 
-COPY . .
+RUN dotnet restore ./build/pipelines-dotnet-core.csproj
 
-EXPOSE 8080
-CMD [ "npm", "start" ]
+COPY . ./build/
+WORKDIR /build/
+RUN dotnet publish ./pipelines-dotnet-core.csproj -c $BUILDCONFIG -o out /p:Version=$VERSION
+
+FROM microsoft/dotnet:2.2-aspnetcore-runtime
+WORKDIR /app
+
+COPY --from=build /build/out .
+
+ENTRYPOINT ["dotnet", "pipelines-dotnet-core.dll"] 
