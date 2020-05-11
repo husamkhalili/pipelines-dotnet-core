@@ -53,5 +53,5 @@ steps:
   displayName: 'NuGet push'
   inputs:
     command: push
-    publishVstsFeed: 'pipelines-dotnet-core/testpackage'
+    publishVstsFeed: 'pipelines-dotnet-core/husamkhalili'
     allowPackageConflicts: true
