@@ -6,7 +6,7 @@ WORKDIR /app
 COPY . ./
 
 # dotnet commands to build, test, and publish
-RUN dotnet restore
+#RUN dotnet restore
 #RUN dotnet build -c Release
 #RUN dotnet publish -c Release -o out
 
