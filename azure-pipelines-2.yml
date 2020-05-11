@@ -16,7 +16,7 @@ variables:
   Major: '1'
   Minor: '0'
   Patch: '0'
-
+  imageName: 'pipelines-dotnetcore-docker'
 steps:
 #- task: NuGetToolInstaller@1
 
@@ -38,20 +38,29 @@ steps:
     command: build
     projects: '**/*.csproj'
     arguments: '--configuration Release' # Update this to match your need
-- task: NuGetCommand@2
-  inputs:
-    command: pack
-    versioningScheme: byPrereleaseNumber
-    majorVersion: '$(Major)'
-    minorVersion: '$(Minor)'
-    patchVersion: '$(Patch)'
-    packagesToPack: '**/*.csproj'
 
-- task: NuGetAuthenticate@0
-  displayName: 'NuGet Authenticate'
-- task: NuGetCommand@2
-  displayName: 'NuGet push'
+#- task: NuGetCommand@2
+#  inputs:
+#    command: pack
+#    versioningScheme: byPrereleaseNumber
+#    majorVersion: '$(Major)'
+#    minorVersion: '$(Minor)'
+#    patchVersion: '$(Patch)'
+#    packagesToPack: '**/*.csproj'
+
+#- task: NuGetAuthenticate@0
+#  displayName: 'NuGet Authenticate'
+#- task: NuGetCommand@2
+#  displayName: 'NuGet push'
+#  inputs:
+#    command: push
+#    publishVstsFeed: 'pipelines-dotnet-core/testpackage-dotnetcoreproj'
+#    allowPackageConflicts: true
+
+
+- task: Docker@2
+  displayName: Build an image
   inputs:
-    command: push
-    publishVstsFeed: 'pipelines-dotnet-core/testpackage-dotnetcoreproj'
-    allowPackageConflicts: true
+    repository: $(imageName)
+    command: build
+    Dockerfile: /Dockerfile
