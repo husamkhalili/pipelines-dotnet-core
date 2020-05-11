@@ -1,17 +1,11 @@
-# First stage of multi-stage build
-FROM microsoft/aspnetcore-build AS build-env
-WORKDIR /app
+FROM node:8
 
-# copy the contents of agent working directory on host to workdir in container
-COPY . ./
+WORKDIR /usr/src/app
 
-# dotnet commands to build, test, and publish
-#RUN dotnet restore
-#RUN dotnet build -c Release
-#RUN dotnet publish -c Release -o out
+COPY package*.json ./
+RUN npm ci --only=production
 
-# Second stage - Build runtime image
-FROM microsoft/aspnetcore
-WORKDIR /app
-COPY --from=build-env /app/out .
-ENTRYPOINT ["dotnet", "pipelines-dotnet-core.dll"]
+COPY . .
+
+EXPOSE 8080
+CMD [ "npm", "start" ]
