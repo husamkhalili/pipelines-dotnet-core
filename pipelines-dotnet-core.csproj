@@ -11,5 +11,10 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
   </ItemGroup>
-
+<configuration>
+  <packageSources>
+    <clear />
+    <add key="husamkhalili" value="https://pkgs.dev.azure.com/husamkhalili/_packaging/husamkhalili/nuget/v3/index.json" />
+  </packageSources>
+</configuration>
 </Project>
